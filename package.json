@@ -1,0 +1,24 @@
+{
+  "name": "if1015covidproject-worker",
+  "version": "1.0.0",
+  "description": "The worker used to download data from Covid API and persist it in a RabbitMQ.",
+  "main": "producer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esvm/IF1015CovidProject-Worker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esvm/IF1015CovidProject-Worker/issues"
+  },
+  "homepage": "https://github.com/esvm/IF1015CovidProject-Worker#readme",
+  "dependencies": {
+    "amqplib": "^0.6.0",
+    "axios": "^0.21.0",
+    "ws": "^7.4.0"
+  }
+}
