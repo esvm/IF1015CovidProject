@@ -14,6 +14,10 @@ const QUEUE_BY_DATE = 'reports_QUEUE_BY_DATE_by_date';
 
 let queueChannel;
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 const getDataFromCovidAPIGeneralSpecificDate = async (date) => {
     const resp = await axios.get(`${COVID_API_URL}/brazil/${date}`)
         .then(response => {
@@ -50,6 +54,7 @@ amqp.connect(`amqps://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}`, (err
 const loadCovidData = async () => {
     let startDate = new Date("2020-02-01");
     while (startDate < Date.now()) {
+        sleep(2 * 60 * 1000) // sleep for 2 min
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
         const reportGeneral = await getDataFromCovidAPIGeneralSpecificDate(dateString);
         

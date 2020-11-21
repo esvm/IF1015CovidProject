@@ -71,7 +71,7 @@ setInterval(async () => {
     if (reportCountries) {
         publishToQueue(reportCountries, QUEUE_COUNTRIES);
     }
-}, 3000);
+}, 5 * 60 * 1000); // sleep for 5min
 
 var http = require('http');
 http.createServer(function (req, res) {
