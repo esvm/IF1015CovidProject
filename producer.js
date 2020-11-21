@@ -19,8 +19,6 @@ let queueChannel;
 const getDataFromCovidAPIGeneral = async () => {
     const resp = await axios.get(COVID_API_URL)
         .then(response => {
-            // console.log('Brazil')
-            // console.log(util.inspect(response.data, {showHidden: false, depth: null}))
             return response.data;
         })
         .catch(error => {
@@ -32,8 +30,6 @@ const getDataFromCovidAPIGeneral = async () => {
 const getDataFromCovidAPICountries = async () => {
     const resp = await axios.get(`${COVID_API_URL}/countries`)
         .then(response => {
-            // console.log('Countries')
-            // console.log(util.inspect(response.data, {showHidden: false, depth: null}))
             return response.data;
         })
         .catch(error => {
@@ -48,11 +44,6 @@ const publishToQueue = (report, queue) => {
     try {
         queueChannel.assertQueue(queue, { durable: true });
         queueChannel.sendToQueue(queue, Buffer.from(JSON.stringify(report)), { persistent: true });
-
-        console.log(queue)
-        console.log(report.data)
-        console.log(JSON.stringify(report))
-        // console.log(util.inspect(response.data, {showHidden: false, depth: null}))
 
         console.log('message sent to queue');
     } catch (e) {

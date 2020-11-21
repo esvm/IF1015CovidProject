@@ -4,7 +4,8 @@
   "description": "The worker used to download data from Covid API and persist it in a RabbitMQ.",
   "main": "producer.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./producer.js"
   },
   "repository": {
     "type": "git",
