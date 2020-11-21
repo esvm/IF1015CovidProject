@@ -10,7 +10,7 @@ const RMQ_PORT = '5671';
 
 const COVID_API_URL = 'https://covid19-brazil-api.now.sh/api/report/v1';
 
-const QUEUE_BY_DATE = 'reports_QUEUE_BY_DATE_by_date';
+const QUEUE_BY_DATE = 'reports_queue_general_by_date';
 
 let queueChannel;
 
