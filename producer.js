@@ -66,7 +66,7 @@ const produceDemoCovidData = async (stringDate) => { // "2020-02-01"
     let startDate = new Date(stringDate);
 
     while (startDate.getTime() <= getYesterdayTimestamp() && shouldContinue) {
-        await sleep(3 * 1000) // sleep for 3 sec
+        await sleep(1 * 1000) // sleep for 2 sec
         
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
         const reportData = await getDataFromCovidAPIGeneralSpecificDate(dateString);
