@@ -3,10 +3,9 @@
 const amqp = require('amqplib/callback_api');
 const axios = require('axios');
 
-const RMQ_USER = 'covid-api-user';
-const RMQ_PASSWORD = '9j%L*9U4CewmGZZ6u8zf';
-const RMQ_HOST = 'b-fccd3130-419b-4c98-b0d3-421707f92cbd.mq.sa-east-1.amazonaws.com';
-const RMQ_PORT = '5671';
+const RMQ_USER = "xrqojakv";
+const RMQ_PASSWORD = "kRsl-c5TlomUCCHpM32CHKyMtXHq_i_X";
+const RMQ_HOST = "toad.rmq.cloudamqp.com/xrqojakv";
 
 const COVID_API_URL = 'https://covid19-brazil-api.now.sh/api/report/v1';
 
@@ -48,7 +47,7 @@ const publishToQueue = (report, queue) => {
     }
 }
 
-amqp.connect(`amqps://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}`, (err, connection) => {
+amqp.connect(`amqps://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}`, (err, connection) => {
     if (err) throw err;
 
     connection.createChannel((err, channel) => {
