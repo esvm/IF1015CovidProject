@@ -66,7 +66,7 @@ const produceDemoCovidData = async (stringDate) => { // "2020-02-01"
     let startDate = new Date(stringDate);
 
     while (startDate.getTime() <= getYesterdayTimestamp() && shouldContinue) {
-        await sleep(5 * 1000) // sleep for 5 sec
+        await sleep(3 * 1000) // sleep for 3 sec
         
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
         const reportData = await getDataFromCovidAPIGeneralSpecificDate(dateString);
@@ -78,6 +78,8 @@ const produceDemoCovidData = async (stringDate) => { // "2020-02-01"
         console.log(`${startDate.toISOString()} sent to queue`);
         startDate.setDate(startDate.getDate()+1);
     }
+
+    shouldContinue = false;
 }
 
 const publishToQueue = (report, queue) => {
@@ -121,12 +123,16 @@ var app = express();
 
 app.use(express.static('public'));
 
-app.post('/demo', function (req, res) {
+app.post('/demo-start', function (req, res) {
     shouldContinue = !shouldContinue;
-    const date = req.query.date;
-    res.send(`Here is your date sir: ${date}`);
-    produceDemoCovidData(date);
+    res.send('Demo started...');
+    produceDemoCovidData(req.query.date);
 });
+
+app.post('/demo-stop', function (res, res) {
+    shouldContinue = false
+    res.send(`Demo ready to begin again`)
+})
 
 app.get('/', function(req, res) {
     res.send('Hello Kiev')
