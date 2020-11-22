@@ -23,8 +23,9 @@ function sleep(ms) {
 }
 
 function getYesterdayTimestamp() {
-    const currDate = new Date();
-    const yesterday = currDate.setDate(currDate.getDate()-1);
+    const now = Date.now();
+    const d = new Date(new Date(now).toISOString().split("T")[0]);
+    const yesterday = new Date(d.setDate(d.getDate()-1)).getTime();
     return yesterday;
 }
 
@@ -63,7 +64,8 @@ const getDataFromCovidAPIGeneralSpecificDate = async (date) => {
 
 const produceDemoCovidData = async (stringDate) => { // "2020-02-01"
     let startDate = new Date(stringDate);
-    while (startDate <= getYesterdayTimestamp() && shouldContinue) {
+
+    while (startDate.getTime() <= getYesterdayTimestamp() && shouldContinue) {
         await sleep(5 * 1000) // sleep for 5 sec
         
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
@@ -137,5 +139,5 @@ app.use(function(req, res, next) {
 });
 
 app.listen(process.env.PORT || 8080, function () {
-    console.log(`Example app listening on port ${process.env.PORT}!`);
+    console.log(`Example app listening on port ${process.env.PORT || 8080}!`);
 });

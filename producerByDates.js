@@ -18,8 +18,9 @@ function sleep(ms) {
 }
 
 function getYesterdayTimestamp() {
-    const currDate = new Date();
-    const yesterday = currDate.setDate(currDate.getDate()-1);
+    const now = Date.now();
+    const d = new Date(new Date(now).toISOString().split("T")[0]);
+    const yesterday = new Date(d.setDate(d.getDate()-1)).getTime();
     return yesterday;
 }
 
@@ -58,7 +59,7 @@ amqp.connect(`amqps://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}`, (err, connection
 
 const loadCovidData = async () => {
     let startDate = new Date("2020-02-01");
-    while (startDate < getYesterdayTimestamp()) {
+    while (startDate.getTime() < getYesterdayTimestamp()) {
         await sleep(2 * 60 * 1000) // sleep for 2 min
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
         const reportGeneral = await getDataFromCovidAPIGeneralSpecificDate(dateString);
