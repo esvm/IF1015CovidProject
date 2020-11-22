@@ -16,7 +16,13 @@ let queueChannel;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
+}
+
+function getYesterdayTimestamp() {
+    const currDate = new Date();
+    const yesterday = currDate.setDate(currDate.getDate()-1);
+    return yesterday;
+}
 
 const getDataFromCovidAPIGeneralSpecificDate = async (date) => {
     const resp = await axios.get(`${COVID_API_URL}/brazil/${date}`)
@@ -53,7 +59,7 @@ amqp.connect(`amqps://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}`, (err
 
 const loadCovidData = async () => {
     let startDate = new Date("2020-02-01");
-    while (startDate < Date.now()) {
+    while (startDate < getYesterdayTimestamp()) {
         await sleep(2 * 60 * 1000) // sleep for 2 min
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
         const reportGeneral = await getDataFromCovidAPIGeneralSpecificDate(dateString);

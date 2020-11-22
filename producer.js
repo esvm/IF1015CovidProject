@@ -23,6 +23,12 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function getYesterdayTimestamp() {
+    const currDate = new Date();
+    const yesterday = currDate.setDate(currDate.getDate()-1);
+    return yesterday;
+}
+
 const getDataFromCovidAPIGeneral = async () => {
     const resp = await axios.get(COVID_API_URL)
         .then(response => {
@@ -58,7 +64,7 @@ const getDataFromCovidAPIGeneralSpecificDate = async (date) => {
 
 const produceDemoCovidData = async (stringDate) => { // "2020-02-01"
     let startDate = new Date(stringDate);
-    while (startDate < Date.now() && shouldContinue) {
+    while (startDate <= getYesterdayTimestamp() && shouldContinue) {
         await sleep(5 * 1000) // sleep for 5 sec
         
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
