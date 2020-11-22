@@ -12,9 +12,16 @@ const COVID_API_URL = 'https://covid19-brazil-api.now.sh/api/report/v1';
 
 const QUEUE_GENERAL = 'reports_queue_general';
 const QUEUE_COUNTRIES = 'reports_queue_countries';
+const QUEUE_DEMO = "reports_queue_demo";
+let shouldContinue = false
+
 const util = require('util');
 
 let queueChannel;
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const getDataFromCovidAPIGeneral = async () => {
     const resp = await axios.get(COVID_API_URL)
@@ -36,6 +43,34 @@ const getDataFromCovidAPICountries = async () => {
             console.log(error);
         });
     return resp;
+}
+
+const getDataFromCovidAPIGeneralSpecificDate = async (date) => {
+    const resp = await axios.get(`${COVID_API_URL}/brazil/${date}`)
+        .then(response => {
+            return response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    return resp;
+}
+
+const produceDemoCovidData = async (stringDate) => { // "2020-02-01"
+    let startDate = new Date(stringDate);
+    while (startDate < Date.now() && shouldContinue) {
+        await sleep(5 * 1000) // sleep for 5 sec
+        
+        const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
+        const reportData = await getDataFromCovidAPIGeneralSpecificDate(dateString);
+        
+        if (reportData) {
+            await publishToQueue(reportData, QUEUE_DEMO);
+        }
+
+        console.log(`${startDate.toISOString()} sent to queue`);
+        startDate.setDate(startDate.getDate()+1);
+    }
 }
 
 const publishToQueue = (report, queue) => {
@@ -73,9 +108,29 @@ setInterval(async () => {
     }
 }, 5 * 60 * 1000); // sleep for 5min
 
-var http = require('http');
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.write('Hello World!');
-  res.end();
-}).listen(process.env.PORT);
+
+var express = require('express');
+var app = express();
+
+app.use(express.static('public'));
+
+app.post('/demo', function (req, res) {
+    shouldContinue = !shouldContinue;
+    const date = req.query.date;
+    res.send(`Here is your date sir: ${date}`);
+    produceDemoCovidData(date);
+});
+
+app.get('/', function(req, res) {
+    res.send('Hello Kiev')
+})
+
+// Handle 404 - Keep this as a last route
+app.use(function(req, res, next) {
+    res.status(404);
+    res.send('404: File Not Found');
+});
+
+app.listen(8080, function () {
+    console.log(`Example app listening on port 8080!`);
+});

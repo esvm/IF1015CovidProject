@@ -54,7 +54,7 @@ amqp.connect(`amqps://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}`, (err
 const loadCovidData = async () => {
     let startDate = new Date("2020-02-01");
     while (startDate < Date.now()) {
-        sleep(2 * 60 * 1000) // sleep for 2 min
+        await sleep(2 * 60 * 1000) // sleep for 2 min
         const dateString = startDate.toISOString().split("T")[0].replace("-", "").replace("-", "");
         const reportGeneral = await getDataFromCovidAPIGeneralSpecificDate(dateString);
         
