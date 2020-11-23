@@ -119,9 +119,11 @@ setInterval(async () => {
 
 
 var express = require('express');
+var cors = require('cors')
 var app = express();
 
 app.use(express.static('public'));
+app.use(cors())
 
 app.post('/demo-start', function (req, res) {
     shouldContinue = !shouldContinue;
